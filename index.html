@@ -11,6 +11,26 @@
         #button {
             text-align: center;
         }
+
+        .logs {
+            height: 400px;
+            background-color: #eee;
+        }
+
+        .progress {
+            overflow: hidden;
+        }
+
+        #messages {
+            font-family: "Lucida Console", Monaco, monospace;
+            list-style: none;
+            text-align: left;
+        }
+
+        #messages li {
+            margin-bottom: 5px;
+        }
+
     </style>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -64,9 +84,18 @@
                 <input type="text" id="app_name" name="app_name" placeholder="Enter Heroku App Name" class="form-control" required />
             </div>
             <div class="form-group" id="button">
-                <button class="btn btn-default" id="btnDeploy">Deploy to Heroku</button>
+                <button type="button" class="btn btn-default" id="btnDeploy">Deploy to Heroku</button>
             </div>
         </form>
+        <div class="progress">
+            <div class="progress-bar" id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+        <div class="logs pre-scrollable">
+            <h4 style='text-align: center; padding-top: 5px; color: #ffffff'> Console Log</h4>
+            <ul id="messages"></ul>
+        </div>
     </div>
 </div>
 </body>

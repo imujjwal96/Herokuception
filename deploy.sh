@@ -29,7 +29,7 @@ cp $BASE/web.js .
 
 cd ..
 
-tar czfv slug.tgz ./app
+tar czfv slug.tgz ./app > /dev/null
 
 heroku create $APP_NAME
 
