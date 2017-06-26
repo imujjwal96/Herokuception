@@ -17,7 +17,26 @@
     <script>
         $(function () {
             var socket = io();
+            $("#btnDeploy").click(function () {
+              var formData = getData();
+              socket.emit('execute', formData);
+            });
         });
+
+        function getData() {
+          var data = {};
+          var formData = $("form").serializeArray();
+          $.each(formData, function (i, field) {
+            if (field.name === "email") { data.email = field.value.trim(); }
+            if (field.name === "git_url") { data.gitUrl = field.value.trim(); }
+            if (field.name === "branch_name") { data.branchName = field.value.trim(); }
+            if (field.name === "heroku_api_key") { data.herokuAPIKey = field.value.trim(); }
+            if (field.name === "app_name" ) { data.appName = field.value; }
+          });
+
+          return data;
+        }
+
     </script>
 </head>
 <body>
@@ -26,15 +45,23 @@
         <form>
             <div class="form-group">
                 <label for="email" class="control-label">Email:</label>
-                <input type="email" id="email" placeholder="Enter Email" class="form-control" required />
+                <input type="email" id="email" name="email" placeholder="Enter Email" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="git_url" class="control-label">Github Repository URL:</label>
+                <input type="text" id="git_url" name="git_url" placeholder="Github Repository URL" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="branch_name" class="control-label">Branch Name:</label>
+                <input type="text" id="branch_name" name="branch_name" placeholder="Branch Name" class="form-control" required />
             </div>
             <div class="form-group">
                 <label for="heroku_api_key" class="control-label">Heroku API Key:</label>
-                <input type="text" id="heroku_api_key"  placeholder="Enter Heroku Authorization Key" class="form-control" required />
+                <input type="text" id="heroku_api_key" name="heroku_api_key"  placeholder="Enter Heroku Authorization Key" class="form-control" required />
             </div>
             <div class="form-group">
                 <label for="app_name" class="control-label">App Name:</label>
-                <input type="text" id="app_name"  placeholder="Enter Heroku App Name" class="form-control" required />
+                <input type="text" id="app_name" name="app_name" placeholder="Enter Heroku App Name" class="form-control" required />
             </div>
             <div class="form-group" id="button">
                 <button class="btn btn-default" id="btnDeploy">Deploy to Heroku</button>
