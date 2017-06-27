@@ -24,7 +24,7 @@ git clone --branch $BRANCH_NAME $GIT_URL app
 
 cd app
 
-curl http://nodejs.org/dist/v0.10.20/node-v0.10.20-linux-x64.tar.gz | tar xzv > /dev/null
+curl https://nodejs.org/dist/v6.11.0/node-v6.11.0-linux-x64.tar.gz | tar xzv > /dev/null
 
 cp $BASE/web.js .
 
@@ -37,8 +37,8 @@ heroku create $APP_NAME
 Arr=($(curl -u ":$API_KEY" -X POST \
 -H 'Content-Type:application/json' \
 -H 'Accept: application/vnd.heroku+json; version=3' \
--d '{"process_types": {"web":"node-v0.10.20-linux-x64/bin/node web.js"}}' \
--n https://api.heroku.com/apps/ujjujjujj/slugs | \
+-d '{"process_types": {"web":"node-v6.11.0-linux-x64/bin/node web.js"}}' \
+-n https://api.heroku.com/apps/${APP_NAME}/slugs | \
 python3 -c "import sys, json; obj=json.load(sys.stdin); print(obj['blob']['url'] + '\n' +obj['id'])"))
 
 curl -X PUT \
