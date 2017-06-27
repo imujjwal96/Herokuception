@@ -11,20 +11,20 @@ io.on('connection', function(socket){
   socket.on('execute', function (formData) {
     executeScript(socket, formData);
   });
-  
 });
 
 var executeScript = function (socket, data) {
   var spawn = require('child_process').spawn;
-  
+
   var email = data.email;
   var gitUrl = data.gitUrl;
   var branchName = data.branchName;
   var herokuAPIKey = data.herokuAPIKey;
   var appName = data.appName;
   var uniqueId = uuidV4();
-  
+
   const args = [
+    "deploy.sh",
     "-e", email,
     "-g", gitUrl,
     "-b", branchName,
@@ -32,9 +32,27 @@ var executeScript = function (socket, data) {
     "-n", appName,
     "-u", uniqueId
   ];
-  
-  var process = spawn('./deploy.sh', args);
-  
+
+  var process = spawn('bash', args);
+
+  process.stdout.on('data', function (data) {
+    socket.emit('logs', data.toString());
+  });
+
+  process.stderr.on('data', function (data) {
+    socket.emit('err-logs', data.toString());
+  });
+
+  process.on('exit', function (code) {
+    console.log('child process exited with code ' + code);
+    if (code === 0) {
+      var data = { email: email, uniqueId: uniqueId, gitUrl: gitUrl };
+      socket.emit('success', data);
+    } else {
+      socket.emit('failure', {errorCode: code});
+    }
+  });
+
 };
 
 var port = process.env.PORT || 3000;

@@ -7,7 +7,7 @@ var server = http.createServer(function (req, res) {
   console.log(req.method + ' ' + req.url);
   
   var parsedUrl = url.parse(req.url);
-  let pathname = '.' + parsedUrl.pathname;
+  var pathname = '.' + parsedUrl.pathname;
   
   var mimeType = {
     '.ico': 'image/x-icon',
@@ -50,7 +50,7 @@ var server = http.createServer(function (req, res) {
   });
 });
 
-var port = process.env.PORT;
+var port = process.env.PORT || 3000;
 
 server.listen(port);
 

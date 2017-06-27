@@ -34,6 +34,7 @@
     </style>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
         $(function () {
             var socket = io();
@@ -41,6 +42,22 @@
               var formData = getData();
               socket.emit('execute', formData);
             });
+
+            socket.on('logs', function (data) {
+              $('#messages').append($('<li class="info">').text(data));
+            });
+
+            socket.on('err-logs', function (msg) {
+              $('#messages').append($('<li class="error">').text(msg));
+            });
+
+            socket.on('success', function (data) {
+              console.log('success');
+            });
+
+          socket.on('failure', function (data) {
+            console.log('failure');
+          })
         });
 
         function getData() {
