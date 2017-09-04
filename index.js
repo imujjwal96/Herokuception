@@ -11,8 +11,6 @@ const HerokuStrategy = require("passport-heroku").Strategy;
 
 const HEROKU_CLIENT_ID = process.env.HEROKU_CLIENT_ID || 'sdfdsgsd';
 const HEROKU_CLIENT_SECRET = process.env.HEROKU_CLIENT_SECRET || 'sdfgsf';
-const cipher = crypto.createCipher('aes256', process.env.SECRET);
-const decipher = crypto.createDecipher('aes256', process.env.SECRET);
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -54,6 +52,7 @@ app.get('/', function(req, res){
 app.post('/auth', passport.authenticate('heroku'));
 
 app.get('/auth/callback', passport.authenticate('heroku'), function(req, res) {
+  let cipher = crypto.createCipher('aes256', process.env.SECRET);
   req.session.herokuAPIKey = cipher.update(req.user.accessToken, 'utf8', 'hex') + cipher.final('hex');
   res.redirect('/');
 });
@@ -66,6 +65,7 @@ io.on('connection', function(socket){
 
 var executeScript = function (socket, data) {
   var spawn = require('child_process').spawn;
+  let decipher = crypto.createDecipher('aes256', process.env.SECRET);
 
   var email = data.email;
   var gitUrl = data.gitUrl;
