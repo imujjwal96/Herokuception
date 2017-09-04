@@ -1,9 +1,14 @@
 {
   "name": "Herokuception",
   "version": "0.0.1",
+  "repository": "imujjwal96/Herokuception",
   "description": "A web application deployed on Heroku used to deploy apps on Heroku",
   "dependencies": {
     "express": "^4.15.2",
+    "express-session": "^1.15.5",
+    "hbs": "^4.0.1",
+    "passport": "^0.4.0",
+    "passport-heroku": "^1.0.0",
     "socket.io": "^2.0.2",
     "uuid": "^3.1.0"
   }
