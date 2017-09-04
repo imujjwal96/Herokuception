@@ -4,7 +4,8 @@ const io = require('socket.io')(http);
 const uuidV4 = require('uuid/v4');
 const passport = require("passport");
 const crypto = require('crypto');
-var session = require("express-session");
+const session = require("express-session");
+const readline = require('readline');
 
 const HerokuStrategy = require("passport-heroku").Strategy;
 
@@ -85,11 +86,17 @@ var executeScript = function (socket, data) {
 
   var process = spawn('bash', args);
 
-  process.stdout.on('data', function (data) {
+  readline.createInterface({
+    input     : process.stdout,
+    terminal  : false
+  }).on('line', function(data) {
     socket.emit('logs', data.toString());
   });
 
-  process.stderr.on('data', function (data) {
+  readline.createInterface({
+    input     : process.stderr,
+    terminal  : false
+  }).on('line', function(data) {
     socket.emit('err-logs', data.toString());
   });
 
