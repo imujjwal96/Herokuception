@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "repository": "imujjwal96/Herokuception",
   "description": "A web application deployed on Heroku used to deploy apps on Heroku",
+  "license": "GPL-3.0",
   "dependencies": {
     "express": "^4.15.2",
     "express-session": "^1.15.5",

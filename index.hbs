@@ -39,24 +39,26 @@
         $(function () {
             var socket = io();
             $("#btnDeploy").click(function () {
-              var formData = getData();
-              socket.emit('execute', formData);
+                var formData = getData();
+                socket.emit('execute', formData);
             });
 
             socket.on('logs', function (data) {
-              $('#messages').append($('<li class="info">').text(data));
+                $("#progress").css("width", data.donePercent + "%");
+                $('#messages').append($('<li class="info">').text(data.data));
             });
 
             socket.on('err-logs', function (msg) {
-              $('#messages').append($('<li class="error">').text(msg));
+                $('#messages').append($('<li class="error">').text(msg));
             });
 
             socket.on('success', function (data) {
-              console.log('success');
+                $("#progress").css("width", "100%");
+                console.log('success');
             });
 
           socket.on('failure', function (data) {
-            console.log('failure');
+                console.log('failure');
           })
         });
 
@@ -103,7 +105,7 @@
                     </div>
                 </form>
                 <div class="progress">
-                    <div class="progress-bar" id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                    <div class="progress-bar progress-bar-striped active" id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
                         <span class="sr-only"></span>
                     </div>
                 </div>
