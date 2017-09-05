@@ -11,6 +11,7 @@ const HerokuStrategy = require("passport-heroku").Strategy;
 
 const HEROKU_CLIENT_ID = process.env.HEROKU_CLIENT_ID || 'sdfdsgsd';
 const HEROKU_CLIENT_SECRET = process.env.HEROKU_CLIENT_SECRET || 'sdfgsf';
+const SECRET = process.env.SECRET;
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -35,7 +36,7 @@ app.set('views', __dirname);
 app.set('view engine', 'hbs');
 
 app.use(session({
-  secret: process.env.SECRET,
+  secret: SECRET,
   resave: true,
   saveUninitialized: true,
   store: new session.MemoryStore()
@@ -52,7 +53,7 @@ app.get('/', function(req, res){
 app.post('/auth', passport.authenticate('heroku'));
 
 app.get('/auth/callback', passport.authenticate('heroku'), function(req, res) {
-  let cipher = crypto.createCipher('aes256', process.env.SECRET);
+  let cipher = crypto.createCipher('aes256', SECRET);
   req.session.herokuAPIKey = cipher.update(req.user.accessToken, 'utf8', 'hex') + cipher.final('hex');
   res.redirect('/');
 });
@@ -65,7 +66,7 @@ io.on('connection', function(socket){
 
 var executeScript = function (socket, data) {
   var spawn = require('child_process').spawn;
-  let decipher = crypto.createDecipher('aes256', process.env.SECRET);
+  let decipher = crypto.createDecipher('aes256', SECRET);
 
   var email = data.email;
   var gitUrl = data.gitUrl;
@@ -86,11 +87,16 @@ var executeScript = function (socket, data) {
 
   var process = spawn('bash', args);
 
+  let donePercent = 0;
+
   readline.createInterface({
     input     : process.stdout,
     terminal  : false
   }).on('line', function(data) {
-    socket.emit('logs', data.toString());
+    if ((donePercent + 5) <= 90) {
+      donePercent += 5;
+    }
+    socket.emit('logs', {donePercent: donePercent, data: data.toString()});
   });
 
   readline.createInterface({
